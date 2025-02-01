@@ -2,11 +2,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskManager {
-    private List tasks = new ArrayList<>();
+    private List<String> tasks = new ArrayList<>();
 
-    public void addTask(String t) {
-        tasks.add(t);
-        System.out.println("Task added.");
+    public void addTask(String task) {
+        tasks.add(task);
+        System.out.println("Task added: " + task);
     }
 
     public void listTasks() {
@@ -16,8 +16,12 @@ public class TaskManager {
     }
 
     public void removeTask(int id) {
-        tasks.remove(id - 1);
-        System.out.println("Task removed.");
+        if (id > 0 && id <= tasks.size()) { // Validating the id to prevent IndexOutOfBoundsException
+            tasks.remove(id - 1);
+            System.out.println("Task removed.");
+        } else {
+            System.out.println("Task ID " + id + " is invalid. Please enter a valid ID.");
+        }
     }
 
     public static void main(String[] args) {
@@ -25,5 +29,6 @@ public class TaskManager {
         tm.addTask("Complete project");
         tm.listTasks();
         tm.removeTask(1);
+        tm.listTasks(); // To show that the task has been removed
     }
 }

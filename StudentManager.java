@@ -1,25 +1,40 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentManager {
-    private List students = new ArrayList<>();
-    private List grades = new ArrayList<>();
+class Order {
+    private String customer;
+    private String orderDetail;
 
-    public void addStudent(String s, double g) {
-        students.add(s);
-        grades.add(g);
-        System.out.println("Student added.");
+    public Order(String customer, String orderDetail) {
+        this.customer = customer;
+        this.orderDetail = orderDetail;
     }
 
-    public void listStudents() {
-        for (int i = 0; i < students.size(); i++) {
-            System.out.println("Student: " + students.get(i) + ", Grade: " + grades.get(i));
+    @Override
+    public String toString() {
+        return "Customer: " + customer + ", Order: " + orderDetail;
+    }
+}
+
+public class OrderManager {
+    private List<Order> orders = new ArrayList<>();
+
+    public void addOrder(String customer, String orderDetail) {
+        Order order = new Order(customer, orderDetail);
+        orders.add(order);
+        System.out.println("Order added for " + customer);
+    }
+
+    public void listOrders() {
+        for (Order order : orders) {
+            System.out.println(order);
         }
     }
 
     public static void main(String[] args) {
-        StudentManager sm = new StudentManager();
-        sm.addStudent("John Doe", 85.5);
-        sm.listStudents();
+        OrderManager om = new OrderManager();
+        om.addOrder("Alice", "Laptop");
+        om.addOrder("Bob", "Phone");
+        om.listOrders();
     }
 }
