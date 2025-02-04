@@ -21,7 +21,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: '11'
-        distribution: 'temurin'   # Agregar este parámetro
+        distribution: 'temurin'
 
     # Crear el directorio bin para los archivos compilados si no existe
     - name: Create bin directory
@@ -45,20 +45,20 @@ jobs:
         mkdir -p jacoco-reports
 
         # Descargar JaCoCo (agente)
-        wget https://github.com/jacoco/jacoco/releases/download/v0.8.8/jacoco-0.8.8-agent.jar -P /tmp
+        wget https://repo1.maven.org/maven2/org/jacoco/org.jacoco.agent/0.8.8/org.jacoco.agent-0.8.8.jar -P /tmp
 
         # Compilar el código y las pruebas
         javac -d bin -cp .:path-to-your-test-classes -sourcepath . Inventory.java OrderManager.java StudentManager.java TaskManager.java
 
         # Ejecutar el programa con el agente JaCoCo
-        java -javaagent:/tmp/jacoco-0.8.8-agent.jar -cp bin com.example.Inventory
+        java -javaagent:/tmp/org.jacoco.agent-0.8.8.jar -cp bin com.example.Inventory
 
         # Mover el archivo jacoco.exec generado
         mv jacoco.exec jacoco-reports/
 
         # Generar el informe de cobertura de JaCoCo en formato HTML
-        wget https://github.com/jacoco/jacoco/releases/download/v0.8.8/jacoco-0.8.8-cli.jar -P /tmp
-        java -cp /tmp/jacoco-0.8.8-cli.jar org.jacoco.cli.internal.Main report jacoco-reports/jacoco.exec --classfiles bin --html jacoco-reports
+        wget https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/0.8.8/org.jacoco.cli-0.8.8.jar -P /tmp
+        java -cp /tmp/org.jacoco.cli-0.8.8.jar org.jacoco.cli.internal.Main report jacoco-reports/jacoco.exec --classfiles bin --html jacoco-reports
 
     # Subir el informe de JaCoCo como artefacto
     - name: Upload JaCoCo report
