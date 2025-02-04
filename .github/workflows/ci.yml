@@ -1,4 +1,4 @@
-name: Java CI with Checkstyle, SpotBugs, and JaCoCo
+name: Java Build, Check, and Analyze
 
 on:
   push:
@@ -9,44 +9,67 @@ on:
       - master
 
 jobs:
-  build:
+  build-and-analyze:
     runs-on: ubuntu-latest
-
+    
     steps:
-      # Paso 1: Checkout del código
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Check out repository
+      uses: actions/checkout@v2
 
-      # Paso 2: Configurar JDK 11
-      - name: Set up JDK 11
-        uses: actions/setup-java@v4
-        with:
-          java-version: '11'
-          distribution: 'temurin'
+    # Instalar JDK 11
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
 
-      # Paso 3: Instalar Checkstyle
-      - name: Install Checkstyle
-        run: |
-          wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-8.45/checkstyle-8.45-all.jar
-          chmod +x checkstyle-8.45-all.jar
+    # Crear el directorio bin para los archivos compilados si no existe
+    - name: Create bin directory
+      run: mkdir -p bin
 
-      # Paso 4: Ejecutar Checkstyle
-      - name: Run Checkstyle
-        run: java -jar checkstyle-8.45-all.jar -c /google_checks.xml $(find . -name "*.java")
+    # Compilar el código fuente con javac
+    - name: Compile Java code
+      run: |
+        javac -d bin Inventory.java OrderManager.java StudentManager.java TaskManager.java
 
-     # Paso 5: Ejecutar SpotBugs con Maven Plugin
-      - name: Run SpotBugs with Maven
-        run: mvn com.github.spotbugs:spotbugs-maven-plugin:4.4.0:spotbugs
+    # Ejecutar Checkstyle
+    - name: Run Checkstyle
+      run: |
+        wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-8.42/checkstyle-8.42-all.jar -P /tmp
+        java -jar /tmp/checkstyle-8.42-all.jar -c /google_checks.xml Inventory.java OrderManager.java StudentManager.java TaskManager.java
 
+    # Ejecutar SpotBugs
+    - name: Run SpotBugs
+      run: |
+        wget https://github.com/spotbugs/spotbugs/releases/download/spotbugs-4.7.0/spotbugs-4.7.0.zip -P /tmp
+        unzip /tmp/spotbugs-4.7.0.zip -d /tmp
+        java -jar /tmp/spotbugs-4.7.0/lib/spotbugs.jar -textui -output spotbugs-report.txt bin
 
-      # Paso 6: Instalar JaCoCo
-      - name: Install JaCoCo
-        run: |
-          wget https://repo1.maven.org/maven2/org/jacoco/org.jacoco.agent/0.8.7/org.jacoco.agent-0.8.7.jar
-          chmod +x org.jacoco.agent-0.8.7.jar
+    # Ejecutar JaCoCo (incluir cobertura de pruebas)
+    - name: Run JaCoCo
+      run: |
+        mkdir -p jacoco-reports
+        javac -d bin -cp .:path-to-your-test-classes -sourcepath . Inventory.java OrderManager.java StudentManager.java TaskManager.java
+        java -javaagent:/path/to/jacocoagent.jar -cp bin com.example.Inventory
+        mv jacoco.exec jacoco-reports/
+        java -cp jacoco-reports -jar /path/to/jacoco-cli.jar report jacoco-reports/jacoco.exec --classfiles bin --html jacoco-reports
 
-      # Paso 7: Ejecutar JaCoCo y generar reporte
-      - name: Run JaCoCo
-        run: |
-          java -javaagent:org.jacoco.agent-0.8.7.jar -cp target <YourTestClass> > result.log
+    # Subir el informe de JaCoCo como artefacto
+    - name: Upload JaCoCo report
+      uses: actions/upload-artifact@v2
+      with:
+        name: jacoco-report
+        path: jacoco-reports/
 
+    # Subir el informe de SpotBugs
+    - name: Upload SpotBugs report
+      uses: actions/upload-artifact@v2
+      with:
+        name: spotbugs-report
+        path: spotbugs-report.txt
+
+    # Subir el informe de Checkstyle
+    - name: Upload Checkstyle report
+      uses: actions/upload-artifact@v2
+      with:
+        name: checkstyle-report
+        path: checkstyle-report.xml
