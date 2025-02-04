@@ -20,7 +20,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: '11'
-        distribution: 'adoptopenjdk'  # Agrega esta línea
+        distribution: 'temurin'  # Cambia aquí a 'temurin'
 
     - name: Compile Java Code with javac
       run: |
