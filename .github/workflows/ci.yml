@@ -34,11 +34,11 @@ jobs:
       - name: Run Checkstyle
         run: java -jar checkstyle-8.45-all.jar -c /google_checks.xml $(find . -name "*.java")
 
-      # Paso 5: Instalar SpotBugs
+     # Paso 5: Instalar SpotBugs
       - name: Install SpotBugs
         run: |
-          wget https://github.com/spotbugs/spotbugs/releases/download/4.7.0/spotbugs-4.7.0.tar.gz
-          tar -xvzf spotbugs-4.7.0.tar.gz
+          wget https://github.com/spotbugs/spotbugs/releases/download/spotbugs-4.7.0/spotbugs-4.7.0.zip
+          unzip spotbugs-4.7.0.zip
           chmod +x spotbugs-4.7.0/bin/spotbugs
 
       # Paso 6: Ejecutar SpotBugs
