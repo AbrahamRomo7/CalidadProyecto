@@ -1,0 +1,58 @@
+name: Java CI with Checkstyle, SpotBugs, and JaCoCo
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Paso 1: Checkout del código
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Paso 2: Configurar JDK 11
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+
+      # Paso 3: Instalar Checkstyle
+      - name: Install Checkstyle
+        run: |
+          wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-8.45/checkstyle-8.45-all.jar
+          chmod +x checkstyle-8.45-all.jar
+
+      # Paso 4: Ejecutar Checkstyle
+      - name: Run Checkstyle
+        run: java -jar checkstyle-8.45-all.jar -c /google_checks.xml $(find . -name "*.java")
+
+      # Paso 5: Instalar SpotBugs
+      - name: Install SpotBugs
+        run: |
+          wget https://github.com/spotbugs/spotbugs/releases/download/4.7.0/spotbugs-4.7.0.tar.gz
+          tar -xvzf spotbugs-4.7.0.tar.gz
+          chmod +x spotbugs-4.7.0/bin/spotbugs
+
+      # Paso 6: Ejecutar SpotBugs
+      - name: Run SpotBugs
+        run: ./spotbugs-4.7.0/bin/spotbugs -textui -output target/spotbugs $(find . -name "*.class")
+
+      # Paso 7: Instalar JaCoCo
+      - name: Install JaCoCo
+        run: |
+          wget https://repo1.maven.org/maven2/org/jacoco/org.jacoco.agent/0.8.7/org.jacoco.agent-0.8.7.jar
+          chmod +x org.jacoco.agent-0.8.7.jar
+
+      # Paso 8: Ejecutar JaCoCo y generar reporte
+      - name: Run JaCoCo
+        run: |
+          java -javaagent:org.jacoco.agent-0.8.7.jar -cp target <YourTestClass> > result.log
+
+        
