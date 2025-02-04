@@ -20,12 +20,12 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: '11'
-        distribution: 'temurin'  # Cambia aquí a 'temurin'
+        distribution: 'temurin'
 
     - name: Compile Java Code with javac
       run: |
-        mkdir -p bin
-        javac -d bin src/**/*.java
+        mkdir -p bin  # Crea la carpeta bin
+        javac -d bin *.java  # Compila los archivos .java en la raíz
 
     - name: Checkstyle Analysis
       run: |
@@ -44,3 +44,4 @@ jobs:
         unzip jacoco-0.8.8.zip
         java -jar jacoco-0.8.8/lib/jacocoant.jar report build/jacoco.exec --classfiles bin --sourcefiles src --html report
         cat report/index.html
+
