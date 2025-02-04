@@ -19,10 +19,10 @@ jobs:
 
       # Paso 2: Configurar JDK 11
       - name: Set up JDK 11
-        uses: actions/setup-java@v4  # Cambié de v2 a v4
+        uses: actions/setup-java@v4
         with:
           java-version: '11'
-          distribution: 'temurin'  # Asegúrate de agregar este parámetro
+          distribution: 'temurin'
 
       # Paso 3: Instalar Checkstyle
       - name: Install Checkstyle
@@ -34,24 +34,17 @@ jobs:
       - name: Run Checkstyle
         run: java -jar checkstyle-8.45-all.jar -c /google_checks.xml $(find . -name "*.java")
 
-     # Paso 5: Instalar SpotBugs
-      - name: Install SpotBugs
-        run: |
-          wget https://github.com/spotbugs/spotbugs/releases/download/spotbugs-4.7.0/spotbugs-4.7.0.zip
-          unzip spotbugs-4.7.0.zip
-          chmod +x spotbugs-4.7.0/bin/spotbugs
+      # Paso 5: Ejecutar SpotBugs con Maven Plugin
+      - name: Run SpotBugs with Maven
+        run: mvn com.github.spotbugs:spotbugs-maven-plugin:4.7.0:spotbugs
 
-      # Paso 6: Ejecutar SpotBugs
-      - name: Run SpotBugs
-        run: ./spotbugs-4.7.0/bin/spotbugs -textui -output target/spotbugs $(find . -name "*.class")
-
-      # Paso 7: Instalar JaCoCo
+      # Paso 6: Instalar JaCoCo
       - name: Install JaCoCo
         run: |
           wget https://repo1.maven.org/maven2/org/jacoco/org.jacoco.agent/0.8.7/org.jacoco.agent-0.8.7.jar
           chmod +x org.jacoco.agent-0.8.7.jar
 
-      # Paso 8: Ejecutar JaCoCo y generar reporte
+      # Paso 7: Ejecutar JaCoCo y generar reporte
       - name: Run JaCoCo
         run: |
           java -javaagent:org.jacoco.agent-0.8.7.jar -cp target <YourTestClass> > result.log
