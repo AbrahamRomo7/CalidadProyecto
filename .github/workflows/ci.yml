@@ -41,9 +41,9 @@ jobs:
     # Ejecutar SpotBugs
     - name: Run SpotBugs
       run: |
-        wget https://github.com/spotbugs/spotbugs/releases/download/spotbugs-4.7.0/spotbugs-4.7.0.zip -P /tmp
-        unzip /tmp/spotbugs-4.7.0.zip -d /tmp
-        java -jar /tmp/spotbugs-4.7.0/lib/spotbugs.jar -textui -output spotbugs-report.txt bin
+        wget https://github.com/spotbugs/spotbugs/releases/download/spotbugs-4.9.0/spotbugs-4.9.0.zip -P /tmp
+        unzip /tmp/spotbugs-4.9.0.zip -d /tmp
+        java -jar /tmp/spotbugs-4.9.0/lib/spotbugs.jar -textui -output spotbugs-report.txt bin
 
     # Ejecutar JaCoCo (incluir cobertura de pruebas)
     - name: Run JaCoCo
