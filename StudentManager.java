@@ -1,40 +1,25 @@
 import java.util.ArrayList;
 import java.util.List;
 
-class Order {
-    private String customer;
-    private String orderDetail;
+public class StudentManager {
+    private List<String> students = new ArrayList<>();
 
-    public Order(String customer, String orderDetail) {
-        this.customer = customer;
-        this.orderDetail = orderDetail;
+    public void addStudent(String student) {
+        students.add(student);
+        System.out.println("Student added: " + student);
     }
 
-    @Override
-    public String toString() {
-        return "Customer: " + customer + ", Order: " + orderDetail;
-    }
-}
-
-public class OrderManager {
-    private List<Order> orders = new ArrayList<>();
-
-    public void addOrder(String customer, String orderDetail) {
-        Order order = new Order(customer, orderDetail);
-        orders.add(order);
-        System.out.println("Order added for " + customer);
-    }
-
-    public void listOrders() {
-        for (Order order : orders) {
-            System.out.println(order);
+    public void listStudents() {
+        for (String student : students) {
+            System.out.println(student);
         }
     }
 
     public static void main(String[] args) {
-        OrderManager om = new OrderManager();
-        om.addOrder("Alice", "Laptop");
-        om.addOrder("Bob", "Phone");
-        om.listOrders();
+        StudentManager sm = new StudentManager();
+        sm.addStudent("John");
+        sm.addStudent("Jane");
+        sm.listStudents();
     }
 }
+
