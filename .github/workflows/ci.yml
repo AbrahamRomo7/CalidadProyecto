@@ -34,9 +34,10 @@ jobs:
       - name: Run Checkstyle
         run: java -jar checkstyle-8.45-all.jar -c /google_checks.xml $(find . -name "*.java")
 
-      # Paso 5: Ejecutar SpotBugs con Maven Plugin
+     # Paso 5: Ejecutar SpotBugs con Maven Plugin
       - name: Run SpotBugs with Maven
-        run: mvn com.github.spotbugs:spotbugs-maven-plugin:4.7.0:spotbugs
+        run: mvn com.github.spotbugs:spotbugs-maven-plugin:4.4.0:spotbugs
+
 
       # Paso 6: Instalar JaCoCo
       - name: Install JaCoCo
