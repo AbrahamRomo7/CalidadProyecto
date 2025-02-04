@@ -39,13 +39,27 @@ jobs:
         java -jar /tmp/checkstyle-8.42-all.jar -c /google_checks.xml Inventory.java OrderManager.java StudentManager.java TaskManager.java
 
     # Ejecutar JaCoCo (incluir cobertura de pruebas)
-    - name: Run JaCoCo
-      run: |
-        mkdir -p jacoco-reports
-        javac -d bin -cp .:path-to-your-test-classes -sourcepath . Inventory.java OrderManager.java StudentManager.java TaskManager.java
-        java -javaagent:/path/to/jacocoagent.jar -cp bin com.example.Inventory
-        mv jacoco.exec jacoco-reports/
-        java -cp jacoco-reports -jar /path/to/jacoco-cli.jar report jacoco-reports/jacoco.exec --classfiles bin --html jacoco-reports
+- name: Run JaCoCo
+  run: |
+    # Crear directorios necesarios
+    mkdir -p jacoco-reports
+
+    # Descargar JaCoCo (agente)
+    wget https://github.com/jacoco/jacoco/releases/download/v0.8.8/jacoco-0.8.8-agent.jar -P /tmp
+
+    # Compilar el código y las pruebas
+    javac -d bin -cp .:path-to-your-test-classes -sourcepath . Inventory.java OrderManager.java StudentManager.java TaskManager.java
+
+    # Ejecutar el programa con el agente JaCoCo
+    java -javaagent:/tmp/jacoco-0.8.8-agent.jar -cp bin com.example.Inventory
+
+    # Mover el archivo jacoco.exec generado
+    mv jacoco.exec jacoco-reports/
+
+    # Generar el informe de cobertura de JaCoCo en formato HTML
+    wget https://github.com/jacoco/jacoco/releases/download/v0.8.8/jacoco-0.8.8-cli.jar -P /tmp
+    java -cp /tmp/jacoco-0.8.8-cli.jar org.jacoco.cli.internal.Main report jacoco-reports/jacoco.exec --classfiles bin --html jacoco-reports
+
 
     # Subir el informe de JaCoCo como artefacto
     - name: Upload JaCoCo report
