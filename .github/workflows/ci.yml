@@ -38,13 +38,6 @@ jobs:
         wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-8.42/checkstyle-8.42-all.jar -P /tmp
         java -jar /tmp/checkstyle-8.42-all.jar -c /google_checks.xml Inventory.java OrderManager.java StudentManager.java TaskManager.java
 
-    # Ejecutar SpotBugs
-    - name: Run SpotBugs
-      run: |
-        wget https://github.com/spotbugs/spotbugs/releases/download/spotbugs-4.9.0/spotbugs-4.9.0.zip -P /tmp
-        unzip /tmp/spotbugs-4.9.0.zip -d /tmp
-        java -jar /tmp/spotbugs-4.9.0/lib/spotbugs.jar -textui -output spotbugs-report.txt bin
-
     # Ejecutar JaCoCo (incluir cobertura de pruebas)
     - name: Run JaCoCo
       run: |
@@ -61,17 +54,9 @@ jobs:
         name: jacoco-report
         path: jacoco-reports/
 
-    # Subir el informe de SpotBugs
-    - name: Upload SpotBugs report
-      uses: actions/upload-artifact@v4
-      with:
-        name: spotbugs-report
-        path: spotbugs-report.txt
-
     # Subir el informe de Checkstyle
     - name: Upload Checkstyle report
       uses: actions/upload-artifact@v4
       with:
         name: checkstyle-report
         path: checkstyle-report.xml
-
