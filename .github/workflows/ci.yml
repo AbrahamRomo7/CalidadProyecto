@@ -55,21 +55,21 @@ jobs:
 
     # Subir el informe de JaCoCo como artefacto
     - name: Upload JaCoCo report
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: jacoco-report
         path: jacoco-reports/
 
     # Subir el informe de SpotBugs
     - name: Upload SpotBugs report
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: spotbugs-report
         path: spotbugs-report.txt
 
     # Subir el informe de Checkstyle
     - name: Upload Checkstyle report
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: checkstyle-report
         path: checkstyle-report.xml
